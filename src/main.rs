@@ -21,6 +21,8 @@ fn put(stdout: &mut StdoutLock, byte: u8) {
     stdout.write_all(&[byte]).unwrap();
 }
 
+/// This function is responsible for interpreting our generated opcodes.
+/// (Look at how cute and smol it is :O)
 fn execute(program: &[Opcode], tape: &mut [u8]) {
     let mut program_counter = 0;
     let mut data_pointer = 0;
@@ -57,7 +59,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     match args.next() {
         Some(path) => {
             if let Some(unused) = args.next() {
-                return Err(format!("Incorrect usage: {unused} and all subsequent arguments are ignored.\n Usage: boyfriend [path]").into());
+                return Err(format!("Incorrect usage: {unused} and all subsequent arguments are ignored. Usage: boyfriend [path]").into());
             }
 
             let source = fs::read_to_string(&path)?;

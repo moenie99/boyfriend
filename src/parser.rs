@@ -1,20 +1,31 @@
 use std::str::Chars;
 
+/// A brainfuck ast consists of a list of instructions.
 pub type Ast = Vec<Instruction>;
 
 #[derive(Debug, PartialEq)]
+/// The possible nodes of our Brainfuck Ast. This is essentially a tree.
 pub enum Instruction {
+    /// An instruction to move one cell to the right, represented by `<`.
     MoveRight,
+    /// An instruction to move one cell to the left, represented by `>`.
     MoveLeft,
+    /// An increment instruction, represented by `+`.
     Increment,
+    /// A decrement instruction, represented by `-`.
     Decrement,
+    /// A write instruction, represented by `.`.
     Write,
+    /// A read instruction, represented by `,`.
     Read,
+    /// A loop inbetween `[` and `]`. This node highlights the tree-like nature
+    /// of a brainfuck program.
     Loop(Ast),
 }
 
 use Instruction::*;
 
+/// Takes a source and parses it into an AST. Returns None on Parse-errors.
 pub fn parse(source: &str) -> Option<Ast> {
     parse_at_depth(&mut source.chars(), &mut 0)
 }
