@@ -74,7 +74,7 @@ mod tests {
 
     #[track_caller]
     fn assert_parse(source: &str, expected: Ast) {
-        let mut chars = source.chars();
+        let chars = source.chars();
         let program = parse(source).unwrap();
         assert_eq!(expected, program);
         assert!(chars.as_str().is_empty());
