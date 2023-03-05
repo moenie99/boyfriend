@@ -27,10 +27,10 @@ use Instruction::*;
 
 /// Takes a source and parses it into an AST. Returns None on Parse-errors.
 pub fn parse(source: &str) -> Option<Ast> {
-    parse_at_depth(&mut source.chars(), &mut 0)
+    parse_inner(&mut source.chars(), &mut 0)
 }
 
-fn parse_at_depth(chars: &mut Chars<'_>, loop_depth: &mut usize) -> Option<Ast> {
+fn parse_inner(chars: &mut Chars<'_>, loop_depth: &mut usize) -> Option<Ast> {
     let mut ast = Vec::new();
 
     while let Some(c) = chars.next() {
@@ -44,7 +44,7 @@ fn parse_at_depth(chars: &mut Chars<'_>, loop_depth: &mut usize) -> Option<Ast> 
             '[' => {
                 let old_loop_depth = *loop_depth;
                 *loop_depth += 1;
-                let inner = parse_at_depth(chars, loop_depth)?;
+                let inner = parse_inner(chars, loop_depth)?;
                 if *loop_depth == old_loop_depth {
                     Loop(inner)
                 } else {
@@ -74,10 +74,8 @@ mod tests {
 
     #[track_caller]
     fn assert_parse(source: &str, expected: Ast) {
-        let chars = source.chars();
         let program = parse(source).unwrap();
         assert_eq!(expected, program);
-        assert!(chars.as_str().is_empty());
     }
 
     #[track_caller]
