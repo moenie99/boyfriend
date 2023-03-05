@@ -13,6 +13,8 @@ use parser::parse;
 mod codegen;
 mod parser;
 
+const TAPE_SIZE: usize = 30_000;
+
 fn get(stdin: &mut StdinLock) -> u8 {
     stdin.by_ref().bytes().next().unwrap().unwrap()
 }
@@ -65,7 +67,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             let source = fs::read_to_string(&path)?;
             let ast = parse(&source).ok_or_else(|| format!("The file at `{path}` couldn't be parsed. This is likely due to misbalanced brackets. Good luck finding them!"))?;
             let program = codegen(ast);
-            let mut tape = vec![0; 30_000];
+            let mut tape = vec![0; TAPE_SIZE];
             execute(&program, &mut tape);
         }
 
